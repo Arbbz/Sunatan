@@ -82,7 +82,7 @@ const App = () => {
     
    <div className="min-h-screen font-inter text-maroon-100 relative " 
         style={{
-        backgroundImage: "url('ai2.png')",
+        backgroundImage: "url('bg2.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
@@ -119,8 +119,8 @@ const App = () => {
             </div>
 
             <CoupleBio />
-            <StorySection />
             <EventDetails />
+            <StorySection />
             <RSVPForm />
             <LiveCommentCard />
             <WeddingGift copyToClipboard={copyToClipboard} />
@@ -208,6 +208,7 @@ const WeddingGift = ({ copyToClipboard }) => {
 
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600 mb-2">Kirim Kado</p>
+            <p className="text-sm text-maroon-500 mt-1">Jl. Pradana 15 No. 22 Pabuaran, Kecamatan Bojonggede, Kabupaten Bogor, Jawa Barat 16921</p>
               <div className="w-full h-64">
                 <iframe
                   title="Lokasi Acara"

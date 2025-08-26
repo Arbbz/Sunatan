@@ -59,7 +59,7 @@ const RSVPForm = () => {
     <section className="bg-white p-6 rounded-2xl shadow-lg mb-8 animate-fade-in-up rsvp-form-section">
       <h3 className="text-2xl font-playfair font-bold text-center text-maroon-500 mb-6 flex items-center justify-center">
         <span className="mr-2 text-gold-500 text-3xl"><MailOpenIcon /></span>
-        Konfirmasi Kehadiran
+        Ucapan Pernikahan
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

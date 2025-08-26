@@ -5,15 +5,15 @@ const CoverPage = ({ openInvitation }) => {
     <div
       className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-90 z-50 animate-fade-in-up"
       style={{
-        backgroundImage: "url('bg2.jpg')", 
+        backgroundImage: "url('bg.jpg')", 
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
       <div 
-      className="absolute inset-0 bg-black opacity-50" // Dark overlay for readability
+      className="absolute inset-0 bg-black opacity-50"  
       style={{
-        zIndex: -1,  // Ensure the overlay is behind the text
+        zIndex: -1,   
       }}
     ></div>
       <div className="text-center text-white p-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>

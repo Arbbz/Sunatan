@@ -58,7 +58,7 @@ const CoupleBio = () => {
           <h4 className="text-5xl font-great-vibes text-maroon-500 mb-2 name-content">Debby</h4>
           <p className="text-xl font-bold text-maroon-600 mb-2">Arnida Debby Fittaloka</p>
           <p className="text-sm text-gray-600 leading-relaxed">Putri ke 1 dari</p>
-          <p className="text-md font-medium text-maroon-500">Bapak agus eko supriyanto (Alm.)</p>
+          <p className="text-md font-medium text-maroon-500">Putri ke 1 dari Bapak Agus Eko Supriyanto (Alm.) dan Ibu Safilinda</p>
         </div>
 
         <div className="text-5xl text-maroon-500 my-4">&</div>
