@@ -7,6 +7,30 @@ import RSVPForm from "./components/RSVPForm";
 import CoupleBio from "./components/CoupleBio";
 import CoverPage from "./components/CoverPage";
 
+const PlayIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M8 5v14l11-7z" />
+  </svg>
+);
+
+const PauseIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+  </svg>
+);
+
 const Test = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [copyMessage, setCopyMessage] = useState("");
@@ -17,10 +41,11 @@ const Test = () => {
   const toggleMusic = () => {
     if (isPlaying) {
       audioRef.current.pause();
+      setIsPlaying(false);
     } else {
       audioRef.current.play();
+      setIsPlaying(true);
     }
-    setIsPlaying(!isPlaying);
   };
 
   const copyToClipboard = (text) => {
@@ -34,13 +59,15 @@ const Test = () => {
   const openInvitation = () => {
     setIsCoverPageOpen(false);
     if (audioRef.current) {
-      audioRef.current.play().catch((err) => {
-        console.log("Audio gagal diputar:", err);
-      });
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => {
+          console.warn("Audio gagal diputar:", err.message);
+        });
     }
   };
 
-  // ✅ Single return statement — no second const Test declaration
   return (
     <div className="container mx-auto px-0 max-w-lg">
       {isCoverPageOpen ? (
@@ -131,6 +158,18 @@ const Test = () => {
           </div>
         </>
       )}
+
+      <button
+        onClick={toggleMusic}
+        className="fixed bottom-4 right-4 z-50 p-3 bg-maroon-600 text-white rounded-full shadow-lg transition-transform duration-300 hover:scale-110"
+        aria-label={isPlaying ? "Jeda Musik" : "Putar Musik"}
+      >
+        <span className="text-xl">
+          {isPlaying ? <PauseIcon /> : <PlayIcon />}
+        </span>
+      </button>
+
+      <audio ref={audioRef} src="audio/perfect.mp3" loop />
     </div>
   );
 };
