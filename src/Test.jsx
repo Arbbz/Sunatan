@@ -1,67 +1,136 @@
+import React, { useRef, useState } from "react";
 import Countdown from "./components/Countdown";
+import EventDetails from "./components/EventDetails";
+import WeddingGift from "./components/WeddingGift";
+import LiveCommentCard from "./components/LiveComment";
+import RSVPForm from "./components/RSVPForm";
+import CoupleBio from "./components/CoupleBio";
+import CoverPage from "./components/CoverPage";
 
 const Test = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [copyMessage, setCopyMessage] = useState("");
+  const [isCoverPageOpen, setIsCoverPageOpen] = useState(true);
+
+  const audioRef = useRef(null);
+
+  const toggleMusic = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopyMessage("Nomor rekening berhasil disalin!");
+    setTimeout(() => {
+      setCopyMessage("");
+    }, 3000);
+  };
+
+  const openInvitation = () => {
+    setIsCoverPageOpen(false);
+    if (audioRef.current) {
+      audioRef.current.play().catch((err) => {
+        console.log("Audio gagal diputar:", err);
+      });
+    }
+  };
+
+  // ✅ Single return statement — no second const Test declaration
   return (
-    <div className="container mx-auto px-4 max-w-lg ">
-      <div
-        className="sticky top-0 h-screen flex flex-col items-center justify-center"
-        style={{
-          backgroundImage: "url('bg1.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="text-center px-3">
-          <div className="relative inline-block mt-6 animate-scale-in">
-            <img
-              src="Foto1.jpeg"
-              className="w-64 h-64 rounded-full object-cover mx-auto mb-4 shadow-lg  border-4 border-gold-500"
-            />
-            <div className="relative z-10">
-              <h3 className="">Wedding Invitation</h3>
-              <h2 className="text-5xl md:text-5xl font-playfair font-bold text-maroon-600 leading-tight header-content">
-                Nadya & Febri
-              </h2>
+    <div className="container mx-auto px-0 max-w-lg">
+      {isCoverPageOpen ? (
+        <CoverPage openInvitation={openInvitation} />
+      ) : (
+        <>
+          <div
+            className="sticky top-0 h-screen flex flex-col items-center justify-center mb-32"
+            style={{
+              backgroundImage: "url('bg1.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <div className="text-center px-3">
+              <div className="relative inline-block mt-6 animate-scale-in">
+                <img
+                  src="Foto1.jpeg"
+                  className="w-64 h-64 rounded-full object-cover mx-auto mb-4 shadow-lg border-4 border-gold-500"
+                />
+                <div className="relative z-10">
+                  <h3 className="">Wedding Invitation</h3>
+                  <h2 className="text-5xl md:text-5xl font-playfair font-bold text-maroon-600 leading-tight header-content">
+                    Nadya & Febri
+                  </h2>
+                </div>
+              </div>
+              <Countdown />
             </div>
           </div>
-          <Countdown />
-        </div>
-      </div>
 
-      <div
-        className="sticky top-0 h-screen flex flex-col items-center justify-center"
-        style={{
-          backgroundImage: "url('bg1.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <h2 className="text-4xl font-bold">The Second slide</h2>
-        <p className="mt-2">Scroll Down for next slide</p>
-      </div>
+          <div
+            className="sticky top-0 h-screen flex flex-col items-center justify-center"
+            style={{
+              backgroundImage: "url('bg1.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <CoupleBio />
+          </div>
 
-      <div
-        className="sticky top-0 h-screen flex flex-col items-center justify-center "
-        style={{
-          backgroundImage: "url('bg1.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <h2 className="text-4xl font-bold">The Third slide</h2>
-        <p className="mt-2">Scroll Down</p>
-      </div>
+          <div className="min-h-screen flex flex-col items-center justify-center">
+            <EventDetails />
+          </div>
 
-      <div
-        className="sticky top-0 h-screen flex flex-col items-center justify-center "
-        style={{
-          backgroundImage: "url('bg1.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <h2 className="text-4xl font-bold">The Fourth slide</h2>
-      </div>
+          <div
+            className="sticky top-0 flex flex-col items-center justify-center"
+            style={{
+              backgroundImage: "url('bg1.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <WeddingGift />
+            <RSVPForm />
+            <LiveCommentCard />
+            <div
+              className="w-full min-h-screen flex flex-col items-center justify-end pb-20"
+              style={{
+                backgroundImage: "url('bg1.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <div className="text-center">
+                <div className="relative inline-block animate-scale-in">
+                  <img src="Foto1.jpeg" className="mx-auto mb-6 shadow-xl" />
+                  <div className="relative z-10 space-y-4">
+                    <h2
+                      className="text-4xl text-maroon-600"
+                      style={{ fontFamily: "'Allura', cursive" }}
+                    >
+                      See You On Our Big Day
+                    </h2>
+                    <p className="text-sm md:text-base text-gray-700 max-w-md mx-auto leading-relaxed">
+                      Merupakan suatu kehormatan dan kebahagiaan bagi kami
+                      apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan
+                      doa restu untuk pernikahan kami.
+                    </p>
+                    <h3 className="text-2xl md:text-4xl font-semibold text-[#b59b72]">
+                      Nadya & Febri
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
