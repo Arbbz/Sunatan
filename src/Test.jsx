@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Countdown from "./components/Countdown";
 import EventDetails from "./components/EventDetails";
 import WeddingGift from "./components/WeddingGift";
@@ -31,12 +31,81 @@ const PauseIcon = () => (
   </svg>
 );
 
+const ScrollIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-1-7.414V7h2v5.586l2.707 2.707-1.414 1.414L12 13.414l-2.293 2.293-1.414-1.414L11 10.586z" />
+  </svg>
+);
+
 const Test = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [copyMessage, setCopyMessage] = useState("");
   const [isCoverPageOpen, setIsCoverPageOpen] = useState(true);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
 
   const audioRef = useRef(null);
+  const scrollIntervalRef = useRef(null);
+  const scrollSpeedRef = useRef(1); // px per tick
+
+  // Auto scroll logic
+  const startAutoScroll = () => {
+    if (scrollIntervalRef.current) return;
+    scrollIntervalRef.current = setInterval(() => {
+      window.scrollBy({ top: scrollSpeedRef.current, behavior: "auto" });
+
+      // Stop at bottom of page
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.body.scrollHeight - 10;
+      if (nearBottom) {
+        stopAutoScroll();
+      }
+    }, 16); // ~60fps
+  };
+
+  const stopAutoScroll = () => {
+    if (scrollIntervalRef.current) {
+      clearInterval(scrollIntervalRef.current);
+      scrollIntervalRef.current = null;
+    }
+    setIsAutoScrolling(false);
+  };
+
+  const toggleAutoScroll = () => {
+    if (isAutoScrolling) {
+      stopAutoScroll();
+    } else {
+      setIsAutoScrolling(true);
+      startAutoScroll();
+    }
+  };
+
+  // Stop auto scroll when user manually scrolls
+  useEffect(() => {
+    const handleUserScroll = () => {
+      if (isAutoScrolling) {
+        stopAutoScroll();
+      }
+    };
+    window.addEventListener("wheel", handleUserScroll);
+    window.addEventListener("touchmove", handleUserScroll);
+    return () => {
+      window.removeEventListener("wheel", handleUserScroll);
+      window.removeEventListener("touchmove", handleUserScroll);
+    };
+  }, [isAutoScrolling]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollIntervalRef.current) clearInterval(scrollIntervalRef.current);
+    };
+  }, []);
 
   const toggleMusic = () => {
     if (isPlaying) {
@@ -51,9 +120,7 @@ const Test = () => {
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     setCopyMessage("Nomor rekening berhasil disalin!");
-    setTimeout(() => {
-      setCopyMessage("");
-    }, 3000);
+    setTimeout(() => setCopyMessage(""), 3000);
   };
 
   const openInvitation = () => {
@@ -62,10 +129,13 @@ const Test = () => {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch((err) => {
-          console.warn("Audio gagal diputar:", err.message);
-        });
+        .catch((err) => console.warn("Audio gagal diputar:", err.message));
     }
+    // Start auto scroll shortly after opening
+    setTimeout(() => {
+      setIsAutoScrolling(true);
+      startAutoScroll();
+    }, 1500);
   };
 
   return (
@@ -100,21 +170,6 @@ const Test = () => {
           </div>
 
           <div
-            className="sticky top-0 h-screen flex flex-col items-center justify-center"
-            style={{
-              backgroundImage: "url('bg1.png')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <CoupleBio />
-          </div>
-
-          <div className="min-h-screen flex flex-col items-center justify-center">
-            <EventDetails />
-          </div>
-
-          <div
             className="sticky top-0 flex flex-col items-center justify-center"
             style={{
               backgroundImage: "url('bg1.png')",
@@ -122,6 +177,10 @@ const Test = () => {
               backgroundPosition: "center",
             }}
           >
+            <CoupleBio />
+            <div className="min-h-screen flex flex-col items-center justify-center">
+              <EventDetails />
+            </div>
             <WeddingGift />
             <RSVPForm />
             <LiveCommentCard />
@@ -159,6 +218,7 @@ const Test = () => {
         </>
       )}
 
+      {/* Music toggle button */}
       <button
         onClick={toggleMusic}
         className="fixed bottom-4 right-4 z-50 p-3 bg-maroon-600 text-white rounded-full shadow-lg transition-transform duration-300 hover:scale-110"
@@ -168,6 +228,23 @@ const Test = () => {
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </span>
       </button>
+
+      {/* Auto scroll toggle button */}
+      {!isCoverPageOpen && (
+        <button
+          onClick={toggleAutoScroll}
+          className={`fixed bottom-4 left-4 z-50 p-3 text-white rounded-full shadow-lg transition-transform duration-300 hover:scale-110 ${
+            isAutoScrolling ? "bg-green-600" : "bg-gray-500"
+          }`}
+          aria-label={
+            isAutoScrolling ? "Stop Auto Scroll" : "Start Auto Scroll"
+          }
+        >
+          <span className="text-xl">
+            {isAutoScrolling ? <PauseIcon /> : <ScrollIcon />}
+          </span>
+        </button>
+      )}
 
       <audio ref={audioRef} src="audio/perfect.mp3" loop />
     </div>

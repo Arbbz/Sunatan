@@ -101,7 +101,7 @@ const CoupleBio = () => {
             className="text-3xl font-bold md:text-5xl text-[#b59b72] mb-2 whitespace-nowrap"
             style={{ fontFamily: "'Allura', cursive" }}
           >
-            The Bride
+            The Groom
           </h3>
           <h3
             className="text-3xl md:text-5xl text-[#b59b72] mb-2"

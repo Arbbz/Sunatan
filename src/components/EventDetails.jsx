@@ -81,7 +81,7 @@ const EventDetails = () => {
           </p>
           <div className="mt-4 text-center">
             <a
-              href="https://www.google.com/maps/place/6%C2%B009'27.8%22S+106%C2%B048'47.3%22E/@-6.1577288,106.8105727,17z"
+              href="https://maps.app.goo.gl/CSSw9hP8BrThi9eG8"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-sm px-6 py-2 rounded-full bg-yellow-600 text-white font-medium shadow-md transition-all duration-300 hover:bg-yellow-700 hover:scale-105"
@@ -121,7 +121,7 @@ const EventDetails = () => {
           </p>
           <div className="mt-4 text-center  mb-10">
             <a
-              href="https://www.google.com/maps/place/6%C2%B009'27.8%22S+106%C2%B048'47.3%22E/@-6.1577288,106.8105727,17z"
+              href="https://maps.app.goo.gl/CSSw9hP8BrThi9eG8"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-sm px-6 py-2 rounded-full bg-yellow-600 text-white font-medium shadow-md transition-all duration-300 hover:bg-yellow-700 hover:scale-105"
@@ -139,14 +139,14 @@ const EventDetails = () => {
           </h1>
 
           <p className="text-gray-700 font-medium max-w-md">
-            Jl. Thalib II No.43 RT 15/RW 5, Krukut, Kec. Taman Sari, Jakarta
-            Barat
+            MASJID AL Amaan krukut, Jl. Thalib II No.43 RT 15/RW 5, Krukut, Kec.
+            Taman Sari, Jakarta Barat
           </p>
         </div>
         {/* Peta Google (Link hanya satu) */}
         <div className="mt-8 shadow-2xl ">
           <iframe
-            src="https://www.google.com/maps?q=-6.1577288,106.8131476&hl=id&z=17&output=embed"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4416.159694200014!2d106.8131117!3d-6.1580604999999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f7d932c12e8b%3A0x4db2c858763578e5!2sMASJID%20AL%20Amaan%20krukut!5e1!3m2!1sid!2sid!4v1778836182962!5m2!1sid!2sid"
             width="100%"
             height="350"
             style={{ border: 0 }}
