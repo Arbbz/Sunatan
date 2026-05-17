@@ -117,7 +117,7 @@ const EventDetails = () => {
               fontWeight: 400,
             }}
           >
-            Pukul 10.00 - 17.00 WIB
+            Pukul 12.00 - 17.00 WIB
           </p>
           <div className="mt-4 text-center  mb-10">
             <a
