@@ -1,264 +1,245 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Header from './components/header';
-import Footer from './components/Footer';
-import EventDetails from './components/EventDetails';
-import RSVPForm from './components/RSVPForm';
-import StorySection from './components/Story';
-import CoverPage from './components/CoverPage';
-import CoupleBio from './components/CoupleBio';
-import LiveCommentCard from './components/LiveComment';
-import './App.css';
+import React, { useState, useRef, useEffect } from "react";
+import Footer from "./components/Footer";
+import EventDetails from "./components/EventDetails";
+import Aboutme from "./components/Aboutme";
+import CoverPage from "./components/CoverPage";
+import Opening from "./components/Opening";
+
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+import "./App.css";
 
 const PlayIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play">
-    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polygon points="6 3 20 12 6 21 6 3"></polygon>
   </svg>
 );
 
 const PauseIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pause">
-    <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+    <rect x="6" y="4" width="4" height="16" rx="1"></rect>
   </svg>
 );
 
-const GiftIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-gift">
-    <polyline points="20 12 12 20 4 12"></polyline>
-    <path d="M15 11v4a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-4"></path>
-    <path d="M12 2v20"></path>
-    <path d="M7 6l-2-2m-2-2l-2 2"></path>
-  </svg>
-);
-
-
-// Komponen utama App
 const App = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
-  const [copyMessage, setCopyMessage] = useState('');
-
-  const toggleMusic = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-
-  const copyToClipboard = (text) => {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-      document.execCommand('copy');
-      setCopyMessage('Nomor rekening berhasil disalin!');
-    } catch (err) {
-      console.error('Gagal menyalin:', err);
-      setCopyMessage('Gagal menyalin nomor rekening.');
-    }
-    document.body.removeChild(textarea);
-
-    setTimeout(() => {
-      setCopyMessage('');
-    }, 3000);
-  };
-
   const [isCoverPageOpen, setIsCoverPageOpen] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+
+  const audioRef = useRef(null);
+  const scrollIntervalRef = useRef(null);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1200,
+      once: true,
+      easing: "ease-in-out",
+    });
+
+    // Cleanup scroll jika komponen unmount
+    return () => stopAutoScroll();
+  }, []);
+
+  // Fungsi menggerakkan scroll perlahan
+  const startAutoScroll = () => {
+    setIsAutoScrolling(true);
+
+    const scrollStep = () => {
+      // Cek apakah user sudah mentok sampai bawah website
+      const isBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      if (!isBottom) {
+        // Angka 0.6 menentukan kecepatan scroll. Makin kecil makin lambat & mulus.
+        window.scrollBy(0, 0.6);
+        scrollIntervalRef.current = requestAnimationFrame(scrollStep);
+      } else {
+        stopAutoScroll();
+      }
+    };
+
+    scrollIntervalRef.current = requestAnimationFrame(scrollStep);
+  };
+
+  const stopAutoScroll = () => {
+    setIsAutoScrolling(false);
+    if (scrollIntervalRef.current) {
+      cancelAnimationFrame(scrollIntervalRef.current);
+    }
+  };
+
+  // Deteksi jika user melakukan scroll manual, hentikan autoscroll agar tidak tabrakan
+  const handleUserScroll = () => {
+    if (isAutoScrolling) {
+      stopAutoScroll();
+    }
+  };
 
   const openInvitation = () => {
-    setIsCoverPageOpen(false);  
+    setIsCoverPageOpen(false);
+
     if (audioRef.current) {
-      audioRef.current.play().catch((err) => {
-        console.log("Audio gagal diputar:", err);
-      });
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((err) => {
+          console.log("Audio gagal diputar:", err);
+        });
+    }
+
+    // Berikan jeda sedikit setelah animasi buka agar transisinya rapi, lalu mulai autoscroll
+    setTimeout(() => {
+      AOS.refresh();
+      startAutoScroll();
+    }, 600);
+  };
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
     }
   };
-  
+
   return (
-    
-   <div className="min-h-screen font-inter text-maroon-100 relative " 
-        style={{
-        backgroundImage: "url('bg2.jpg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}>
-        {isCoverPageOpen ? (
+    <div
+      className="min-h-screen relative overflow-hidden bg-[#f8f4eb]"
+      onTouchStart={handleUserScroll} // Matikan autoscroll jika layar disentuh di HP
+      onWheel={handleUserScroll} // Matikan autoscroll jika mouse di-scroll di Laptop
+    >
+      {/* Background Pattern */}
+      <div className="islamic-pattern absolute inset-0 opacity-10"></div>
+
+      {/* Floating Lantern */}
+      <div className="lantern absolute left-5 top-10 z-0"></div>
+      <div className="lantern absolute right-5 top-20 z-0"></div>
+
+      {/* Cover */}
+      {isCoverPageOpen ? (
         <CoverPage openInvitation={openInvitation} />
       ) : (
-      <div className="container py-8 mx-auto px-4 max-w-lg ">
-        <div className="bg-white shadow-4xl overflow-hidden animate-fade-in-up">
-          <Header />
-          <main className="p-8">
-            <div className="text-center mb-8">
-             <p className="text-md md:text-md text-maroon-600 leading-relaxed mb-2 italic">
-                Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, 
-                agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. 
-                Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir. 
-              </p>
-              <span className="text-lg text-maroon-500 mb-4">(Q.S Ar Rum : 21)</span>
-              <p className="font-great-vibes text-xl md:text-3xl text-maroon-500 my-4 bismillah">Bismillahirahmanirrahim</p>
-              <p className="text-md md:text-lg text-maroon-600 leading-relaxed mb-4">
-                Maha Suci Allah SWT yang telah menciptakan makhluk-Nya berpasang-pasangan.
-                Ya Allah perkenankanlah pernikahan putra-putri kami:
-              </p>
-
-              <div className="relative inline-block mt-6 animate-scale-in">
-                <img 
-                    src="couple.jpeg" 
-                    className="rounded-full mx-auto mb-4 border-4 border-maroon-500 shadow-lg object-cover transform hover:scale-105 transition-transform duration-300" 
-                />
-                <div className="relative z-10">
-                  <h2 className="text-5xl md:text-5xl font-playfair font-bold text-maroon-600 leading-tight header-content">Debby & Ihsan</h2>
-                </div>
+        <div className="container mx-auto max-w-lg px-4 py-8 relative z-10">
+          <div className="premium-card animate-open overflow-hidden">
+            <main className="p-8">
+              <div data-aos="zoom-in">
+                <Opening />
               </div>
-      
-            </div>
 
-            <CoupleBio />
-            <EventDetails />
-            <StorySection />
-            <RSVPForm />
-            <LiveCommentCard />
-            <WeddingGift copyToClipboard={copyToClipboard} />
-          </main>
-          <Footer />
-        </div>
-      </div>
-       )}
-
-      <button
-        onClick={toggleMusic}
-        className="fixed bottom-4 right-4 z-50 p-3 bg-maroon-600 text-white rounded-full shadow-lg transition-transform duration-300 hover:scale-110"
-        aria-label={isPlaying ? "Jeda Musik" : "Putar Musik"}
-      >
-        <span className="text-xl">
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </span>
-      </button>
-       <audio ref={audioRef} src="audio/tulus.mp3" loop />
-
-      {copyMessage && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-green-500 text-white text-sm rounded-full shadow-lg transition-opacity duration-300 animate-fade-in-up">
-          {copyMessage}
-        </div>
-      )}
-       
-    </div>
-  );
-};
-
-// Komponen Wedding Gift
-const WeddingGift = ({ copyToClipboard }) => {
-  const [isGiftSectionOpen, setIsGiftSectionOpen] = useState(false);
-
-  const toggleGiftSection = () => {
-    setIsGiftSectionOpen(!isGiftSectionOpen);
-  };
-
-  const accounts = [
-    {
-      bank: 'BCA',
-      accountName: 'Arnida Debby Fittaloka',
-      accountNumber: '6760340764 ',
-    },
-  ];
-
-  const whatsappMessage = "Halo, saya ingin mengonfirmasi pengiriman hadiah pernikahan untuk Budi & Siti.";
-    const whatsappLink = `https://wa.me/6281234567890?text=${encodeURIComponent(whatsappMessage)}`;
-
-
-  return (
-    <section className="bg-white p-6 rounded-2xl shadow-lg animate-fade-in-up">
-      <h3 className="text-2xl font-playfair font-bold text-center text-maroon-500 mb-6 flex items-center justify-center">
-        <span className="mr-2 text-gold-500 text-3xl"><GiftIcon /></span>
-        Wedding Gift
-      </h3>
-      <p className="text-sm text-gray-600 text-center leading-relaxed mb-6">
-        Doa restu Anda adalah karunia yang sangat berarti bagi kami. Namun, jika Anda ingin memberikan hadiah, Anda bisa mengirimkannya melalui rekening di bawah ini.
-      </p>
-      
-      <div className="text-center mb-6">
-        <button
-          onClick={toggleGiftSection}
-          className="bg-maroon-600 text-white font-bold py-3 px-6 rounded-xl shadow-md hover:bg-maroon-700 transition-colors duration-300 flex items-center justify-center mx-auto"
-        >
-          Kirim Gift
-        </button>
-      </div>
-
-      {isGiftSectionOpen && (
-        <div className="space-y-6 animate-fade-in-down">
-          {accounts.map((acc, index) => (
-            <div key={index} className="p-4 border border-gold-500 rounded-xl text-center">
-              <h4 className="text-lg font-bold text-blue-500 mb-1">{acc.bank}</h4>
-              <p className="text-sm text-gray-600">{acc.accountName}</p>
-              <p className="text-md font-bold text-maroon-500 mb-2">{acc.accountNumber}</p>
-              <button
-                onClick={() => copyToClipboard(acc.accountNumber)}
-                className="bg-maroon-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gold-700 transition-colors duration-300"
-              >
-                Salin No Rekening
-              </button>
-            </div>
-          ))}
-
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600 mb-2">Kirim Kado</p>
-            <p className="text-sm text-maroon-500 mt-1">Jl. Pradana 15 No. 22 Pabuaran, Kecamatan Bojonggede, Kabupaten Bogor, Jawa Barat 16921</p>
-              <div className="w-full h-64">
-                <iframe
-                  title="Lokasi Acara"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3980.123456789012!2d106.7939865!3d-6.4575259!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69e9dd8d437e61%3A0x36413d087cda558e!2sJl.%20Pradana%2015%2C%20Pabuaran%2C%20Kecamatan%20Bojonggede%2C%20Kabupaten%20Bogor%2C%20Jawa%20Barat%2016921!5e0!3m2!1sid!2sid!4v1692918000000!5m2!1sid!2sid"
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  aria-hidden="false"
-                  tabIndex="0"
-                ></iframe>
+              <div id="about-section" data-aos="fade-up">
+                <Aboutme />
               </div>
-              <div className="mt-4 text-center">
-                <a
-                  href="https://www.google.com/maps/place/Jl.+Pradana+15,+Pabuaran,+Kecamatan+Bojonggede,+Kabupaten+Bogor,+Jawa+Barat+16921/@-6.4575409,106.7937713,21z/data=!4m6!3m5!1s0x2e69e9dd8d437e61:0x36413d087cda558e!8m2!3d-6.4575259!4d106.7939865!16s%2Fg%2F11f614xd5h!5m1!1e4?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-maroon-600 hover:text-maroon-800 underline"
-                >
-                  Lihat Lokasi di Google Maps
-                </a>
-            </div>
+
+              <div data-aos="fade-up">
+                <EventDetails />
+              </div>
+
+              <div className="ornament-divider" data-aos="zoom-in">
+                ❋ ❋ ❋
+              </div>
+
+              <section className="px-6 py-10 text-center" data-aos="fade-up">
+                <p className="mx-auto max-w-md text-lg italic leading-8 text-gray-600">
+                  Merupakan suatu kebahagiaan bagi kami apabila
+                  Bapak/Ibu/Saudara/i berkenan hadir dan mendoakan putra kami
+                  tercinta.
+                </p>
+              </section>
+            </main>
+
+            <Footer />
           </div>
         </div>
       )}
-    </section>
+
+      {/* Audio */}
+      <audio ref={audioRef} src="/audio/laskar.mp3" loop />
+
+      {/* Floating Action Buttons */}
+      {!isCoverPageOpen && (
+        <div className="fixed bottom-5 left-5 right-5 z-50 flex justify-between items-center pointer-events-none">
+          {/* Tombol Autoscroll (Di Sebelah Kiri) */}
+          <button
+            onClick={isAutoScrolling ? stopAutoScroll : startAutoScroll}
+            className={`
+              pointer-events-auto
+              flex
+              h-14
+              w-14
+              items-center
+              justify-center
+              rounded-full
+              text-white
+              shadow-xl
+              transition-all
+              duration-300
+              hover:scale-110
+              text-xs
+              font-bold
+              ${isAutoScrolling ? "bg-amber-600 animate-pulse" : "bg-gray-500"}
+            `}
+          >
+            {isAutoScrolling ? "STOP" : "AUTO"}
+          </button>
+
+          {/* Floating Music Button (Di Sebelah Kanan) */}
+          <button
+            onClick={toggleMusic}
+            className="
+              pointer-events-auto
+              flex
+              h-14
+              w-14
+              items-center
+              justify-center
+              rounded-full
+              bg-gradient-to-r
+              from-red-900
+              to-red-700
+              text-white
+              shadow-xl
+              transition-all
+              duration-300
+              hover:scale-110
+            "
+          >
+            <span className="text-xl flex items-center justify-center">
+              {isPlaying ? <PauseIcon /> : <PlayIcon />}
+            </span>
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
-
-// Tailwind CSS import for the whole app
-const styleLink = document.createElement('link');
-styleLink.rel = 'stylesheet';
-styleLink.href = 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css';
-document.head.appendChild(styleLink);
-
-// Google Fonts import for typography
-const playfairFontLink = document.createElement('link');
-playfairFontLink.rel = 'stylesheet';
-playfairFontLink.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap';
-document.head.appendChild(playfairFontLink);
-
-const greatVibesFontLink = document.createElement('link');
-greatVibesFontLink.rel = 'stylesheet';
-greatVibesFontLink.href = 'https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap';
-document.head.appendChild(greatVibesFontLink);
-
-const interFontLink = document.createElement('link');
-interFontLink.rel = 'stylesheet';
-interFontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
-document.head.appendChild(interFontLink);
 
 export default App;
