@@ -1,4 +1,5 @@
 import React from "react";
+import Countdown from "./Countdown";
 
 const Opening = () => {
   return (
@@ -24,6 +25,7 @@ const Opening = () => {
           <h1 className="elegant-title text-5xl font-bold">Khitan</h1>
         </div>
 
+        <Countdown />
         <p className="mt-8 leading-8 text-gray-600">
           Dengan memohon rahmat dan ridho Allah SWT, kami mengundang
           Bapak/Ibu/Saudara/i untuk menghadiri acara khitan putra kami tercinta.

@@ -4,6 +4,7 @@ import EventDetails from "./components/EventDetails";
 import Aboutme from "./components/Aboutme";
 import CoverPage from "./components/CoverPage";
 import Opening from "./components/Opening";
+import GiftSection from "./components/Gift";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -148,6 +149,7 @@ const App = () => {
         <div className="container mx-auto max-w-lg px-4 py-8 relative z-10">
           <div className="premium-card animate-open overflow-hidden">
             <main className="p-8">
+              <div className="lantern absolute right-5 top-20 z-0"></div>
               <div data-aos="zoom-in">
                 <Opening />
               </div>
@@ -163,13 +165,14 @@ const App = () => {
               <div className="ornament-divider" data-aos="zoom-in">
                 ❋ ❋ ❋
               </div>
-
+              <div className="lantern absolute left-5 top-10 z-0"></div>
               <section className="px-6 py-10 text-center" data-aos="fade-up">
                 <p className="mx-auto max-w-md text-lg italic leading-8 text-gray-600">
                   Merupakan suatu kebahagiaan bagi kami apabila
                   Bapak/Ibu/Saudara/i berkenan hadir dan mendoakan putra kami
                   tercinta.
                 </p>
+                <GiftSection />
               </section>
             </main>
 

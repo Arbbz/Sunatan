@@ -160,3 +160,9 @@ body {
     filter: brightness(1);
   }
 }
+
+.gift-glow {
+  box-shadow:
+    0 0 20px rgba(212, 175, 55, 0.25),
+    0 0 40px rgba(212, 175, 55, 0.1);
+}
