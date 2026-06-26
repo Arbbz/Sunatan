@@ -10,8 +10,7 @@ import "aos/dist/aos.css";
 
 import "./App.css";
 
-// Ikon Play dengan nama unik agar tidak bentrok
-const FloatingPlayIcon = () => (
+const PlayIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -27,8 +26,7 @@ const FloatingPlayIcon = () => (
   </svg>
 );
 
-// Ikon Pause dengan nama unik agar tidak bentrok
-const FloatingPauseIcon = () => (
+const PauseIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -60,22 +58,22 @@ const App = () => {
       easing: "ease-in-out",
     });
 
-    // Cleanup animasi scroll saat komponen ditutup/unmount
+    // Cleanup scroll jika komponen unmount
     return () => stopAutoScroll();
   }, []);
 
-  // Fungsi untuk menjalankan scroll otomatis ke bawah secara perlahan
+  // Fungsi menggerakkan scroll perlahan
   const startAutoScroll = () => {
     setIsAutoScrolling(true);
 
     const scrollStep = () => {
-      // Deteksi apakah scroll sudah mentok sampai ke dasar halaman web
+      // Cek apakah user sudah mentok sampai bawah website
       const isBottom =
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 2;
 
       if (!isBottom) {
-        // Angka 0.6 mengontrol kecepatan jalannya scroll (makin kecil makin lambat)
+        // Angka 0.6 menentukan kecepatan scroll. Makin kecil makin lambat & mulus.
         window.scrollBy(0, 0.6);
         scrollIntervalRef.current = requestAnimationFrame(scrollStep);
       } else {
@@ -86,7 +84,6 @@ const App = () => {
     scrollIntervalRef.current = requestAnimationFrame(scrollStep);
   };
 
-  // Fungsi menghentikan scroll otomatis
   const stopAutoScroll = () => {
     setIsAutoScrolling(false);
     if (scrollIntervalRef.current) {
@@ -94,14 +91,13 @@ const App = () => {
     }
   };
 
-  // Hentikan autoscroll jika mendeteksi interaksi/scroll manual dari pengguna
+  // Deteksi jika user melakukan scroll manual, hentikan autoscroll agar tidak tabrakan
   const handleUserScroll = () => {
     if (isAutoScrolling) {
       stopAutoScroll();
     }
   };
 
-  // Fungsi yang dipicu saat tombol buka undangan di CoverPage diklik
   const openInvitation = () => {
     setIsCoverPageOpen(false);
 
@@ -112,18 +108,17 @@ const App = () => {
           setIsPlaying(true);
         })
         .catch((err) => {
-          console.log("Audio gagal diputar otomatis oleh browser:", err);
+          console.log("Audio gagal diputar:", err);
         });
     }
 
-    // Beri jeda transisi buka halaman selama 600ms, baru jalankan autoscroll perlahan
+    // Berikan jeda sedikit setelah animasi buka agar transisinya rapi, lalu mulai autoscroll
     setTimeout(() => {
       AOS.refresh();
       startAutoScroll();
     }, 600);
   };
 
-  // Fungsi kendali hidup/mati musik latar belakang
   const toggleMusic = () => {
     if (!audioRef.current) return;
 
@@ -138,18 +133,15 @@ const App = () => {
 
   return (
     <div
-      className="min-h-screen relative overflow-hidden bg-[#f8f4eb]"
-      onTouchStart={handleUserScroll} // Deteksi usapan layar di HP
-      onWheel={handleUserScroll} // Deteksi scroll wheel mouse di Laptop/PC
+      className="min-h-screen relative overflow-hidden bg-white"
+      onTouchStart={handleUserScroll} // Matikan autoscroll jika layar disentuh di HP
+      onWheel={handleUserScroll} // Matikan autoscroll jika mouse di-scroll di Laptop
     >
-      {/* Background Pattern */}
-      <div className="islamic-pattern absolute inset-0 opacity-10"></div>
-
       {/* Floating Lantern */}
       <div className="lantern absolute left-5 top-10 z-0"></div>
       <div className="lantern absolute right-5 top-20 z-0"></div>
 
-      {/* Konten Halaman: Cover / Isi Utama */}
+      {/* Cover */}
       {isCoverPageOpen ? (
         <CoverPage openInvitation={openInvitation} />
       ) : (
@@ -186,13 +178,13 @@ const App = () => {
         </div>
       )}
 
-      {/* Audio Element */}
-      <audio ref={audioRef} src="/audio/laskar.mp3" loop />
+      {/* Audio */}
+      <audio ref={audioRef} src="./audio/zain.mp3" loop />
 
       {/* Floating Action Buttons */}
       {!isCoverPageOpen && (
         <div className="fixed bottom-5 left-5 right-5 z-50 flex justify-between items-center pointer-events-none">
-          {/* Tombol Kontrol Autoscroll (Sisi Kiri Kaki Layar) */}
+          {/* Tombol Autoscroll (Di Sebelah Kiri) */}
           <button
             onClick={isAutoScrolling ? stopAutoScroll : startAutoScroll}
             className={`
@@ -216,7 +208,7 @@ const App = () => {
             {isAutoScrolling ? "STOP" : "AUTO"}
           </button>
 
-          {/* Tombol Kontrol Musik (Sisi Kanan Kaki Layar) */}
+          {/* Floating Music Button (Di Sebelah Kanan) */}
           <button
             onClick={toggleMusic}
             className="
@@ -227,6 +219,7 @@ const App = () => {
               items-center
               justify-center
               rounded-full
+              bg-gradient-to-r
               from-red-900
               to-red-700
               text-white
@@ -237,7 +230,7 @@ const App = () => {
             "
           >
             <span className="text-xl flex items-center justify-center">
-              {isPlaying ? <FloatingPauseIcon /> : <FloatingPlayIcon />}
+              {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </span>
           </button>
         </div>

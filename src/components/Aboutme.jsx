@@ -12,8 +12,7 @@ const Aboutme = () => {
 
         <div className="mt-8">
           <img
-            src="/uwais.jpg"
-            alt="Uwais"
+            src="./uwais.jpg"
             className="mx-auto w-64 drop-shadow-2xl transition duration-500 hover:scale-105"
           />
         </div>

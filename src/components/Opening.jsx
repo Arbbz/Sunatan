@@ -12,7 +12,7 @@ const Opening = () => {
           <div className="absolute inset-0 rounded-full bg-yellow-200 blur-3xl opacity-50"></div>
 
           <img
-            src="/family.jpg"
+            src="./family.jpg"
             alt="Family"
             className="family-frame relative z-10 mx-auto"
           />

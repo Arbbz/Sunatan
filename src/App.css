@@ -4,12 +4,7 @@
   /* Mendaftarkan font kustom bernama 'arabic' di Tailwind v4 */
   --font-arabic: "Amiri", serif;
 }
-.islamic-pattern {
-  background-image:
-    radial-gradient(circle at 25% 25%, #c9a227 2px, transparent 2px),
-    radial-gradient(circle at 75% 75%, #c9a227 2px, transparent 2px);
-  background-size: 60px 60px;
-}
+
 .lantern {
   width: 40px;
   height: 60px;
@@ -42,21 +37,6 @@
   box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.08),
     0 0 30px rgba(201, 162, 39, 0.15);
-}
-
-.premium-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  padding: 2px;
-
-  background: linear-gradient(135deg, #c9a227, #f6d365, #c9a227);
-
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-
-  -webkit-mask-composite: xor;
 }
 
 .family-frame {
@@ -117,7 +97,6 @@
 .mosque-footer {
   height: 120px;
 
-  background-image: url("/mosque-silhouette.png");
   background-repeat: repeat-x;
   background-size: contain;
   opacity: 0.15;
@@ -160,14 +139,12 @@ html {
   animation: zoomIn 0.8s ease;
 }
 
-body {
-  background:
-    radial-gradient(circle at top, rgba(212, 175, 55, 0.08), transparent 35%),
-    #f8f4eb;
-}
-
 .elegant-title {
   font-family: "Cinzel", serif;
+}
+
+body {
+  background: #ffffff;
 }
 
 @keyframes shimmer {
