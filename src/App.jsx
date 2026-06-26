@@ -101,28 +101,28 @@ const App = () => {
   const startAutoScroll = () => {
     setIsAutoScrolling(true);
 
-    const scrollStep = () => {
-      // Cek apakah user sudah mentok sampai bawah website
+    scrollIntervalRef.current = setInterval(() => {
       const isBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 2;
+        window.innerHeight + window.pageYOffset >=
+        document.body.offsetHeight - 5;
 
-      if (!isBottom) {
-        // Angka 0.6 menentukan kecepatan scroll. Makin kecil makin lambat & mulus.
-        window.scrollBy(0, 0.6);
-        scrollIntervalRef.current = requestAnimationFrame(scrollStep);
-      } else {
+      if (isBottom) {
         stopAutoScroll();
+        return;
       }
-    };
 
-    scrollIntervalRef.current = requestAnimationFrame(scrollStep);
+      window.scrollTo({
+        top: window.pageYOffset + 1,
+        behavior: "auto",
+      });
+    }, 16);
   };
 
   const stopAutoScroll = () => {
     setIsAutoScrolling(false);
+
     if (scrollIntervalRef.current) {
-      cancelAnimationFrame(scrollIntervalRef.current);
+      clearInterval(scrollIntervalRef.current);
     }
   };
 
@@ -137,6 +137,7 @@ const App = () => {
     setIsCoverPageOpen(false);
 
     if (audioRef.current) {
+      audioRef.current.currentTime = 70;
       audioRef.current
         .play()
         .then(() => {
@@ -161,6 +162,8 @@ const App = () => {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      audioRef.current.currentTime = 72;
+
       audioRef.current.play();
       setIsPlaying(true);
     }
