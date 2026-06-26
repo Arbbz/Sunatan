@@ -5,7 +5,7 @@ const Aboutme = () => {
     <section data-aos="fade-up" className="px-5 py-10 text-center">
       <div className="mx-auto max-w-md">
         <div className="rounded-3xl bg-gradient-to-r from-green-900 via-green-800 to-green-700 p-6 text-white shadow-2xl">
-          <h2 className="uwais-name elegant-title">Uwais</h2>
+          <h2 className="uwais-name elegant-title l ">Uwais</h2>
 
           <p className="mt-3 text-2xl text-yellow-100">Atthafariz Anugerah</p>
         </div>

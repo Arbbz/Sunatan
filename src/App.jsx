@@ -52,6 +52,40 @@ const App = () => {
   const audioRef = useRef(null);
   const scrollIntervalRef = useRef(null);
 
+  const pauseEverything = () => {
+    // Pause musik
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+
+    // Stop auto scroll
+    stopAutoScroll();
+  };
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      // User pindah tab browser, minimize browser,
+      // buka WA, Instagram, dll
+      if (document.hidden) {
+        pauseEverything();
+      }
+    };
+
+    const handleWindowBlur = () => {
+      pauseEverything();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    window.addEventListener("blur", handleWindowBlur);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+      window.removeEventListener("blur", handleWindowBlur);
+    };
+  }, []);
+
   useEffect(() => {
     AOS.init({
       duration: 1200,
@@ -166,7 +200,7 @@ const App = () => {
                 ❋ ❋ ❋
               </div>
               <div className="lantern absolute left-5 top-10 z-0"></div>
-              <section className="px-6 py-10 text-center" data-aos="fade-up">
+              <section className="px-3 py-10 text-center" data-aos="fade-up">
                 <p className="mx-auto max-w-md text-lg italic leading-8 text-gray-600">
                   Merupakan suatu kebahagiaan bagi kami apabila
                   Bapak/Ibu/Saudara/i berkenan hadir dan mendoakan putra kami
