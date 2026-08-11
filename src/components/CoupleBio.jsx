@@ -1,81 +1,140 @@
-import React, { useEffect, useState } from 'react';
+import React from "react";
 
 const CoupleBio = () => {
-  // State untuk melacak visibilitas elemen
-  const [isLeftVisible, setIsLeftVisible] = useState(false);
-  const [isRightVisible, setIsRightVisible] = useState(false);
-
-  // Fungsi untuk memantau elemen dengan IntersectionObserver
-  useEffect(() => {
-    const leftObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setIsLeftVisible(true); // Saat elemen dari kiri muncul
-        }
-      });
-    }, { threshold: 0.5 });
-
-    const rightObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setIsRightVisible(true); // Saat elemen dari kanan muncul
-        }
-      });
-    }, { threshold: 0.5 });
-
-    // Mengamati elemen dengan class 'left' dan 'right'
-    const leftElement = document.querySelector('.couple-bio-left');
-    const rightElement = document.querySelector('.couple-bio-right');
-
-    if (leftElement) leftObserver.observe(leftElement);
-    if (rightElement) rightObserver.observe(rightElement);
-
-    // Cleanup observer ketika komponen di-unmount
-    return () => {
-      if (leftElement) leftObserver.disconnect();
-      if (rightElement) rightObserver.disconnect();
-    };
-  }, []);
-
   return (
-    <section className="bg-gold-50 p-6 rounded-2xl shadow-inner mb-8">
-      <div className="text-center mb-6">
-        <h3 className="text-2xl font-great-vibes text-maroon-500 mb-2">Bride & Groom</h3>
+    <section className="bg-[#f7f5f2] p-6 shadow-inner w-full overflow-hidden">
+      {/* Heading */}
+      <div className="text-center mb-8">
+        <h3
+          className="text-5xl text-[#b59b72] mb-4"
+          style={{ fontFamily: "'Allura', cursive" }}
+        >
+          Bride & Groom
+        </h3>
+
         <p className="text-sm text-gray-600 leading-relaxed max-w-sm mx-auto">
-          Tanpa mengurangi rasa hormat, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:
+          Di antara tanda-tanda (kebesaran)-Nya ialah bahwa Dia menciptakan
+          pasangan-pasangan untukmu dari (jenis) dirimu sendiri agar kamu merasa
+          tenteram kepadanya.
+        </p>
+        <p className="text-sm font-bold text-gray-600 leading-relaxed max-w-sm mx-auto">
+          - Ar-Rum · Ayat 21 -
         </p>
       </div>
-      <div className="flex flex-col items-center justify-center space-y-8">
-        {/* Pihak Wanita - Dari Kiri */}
-        <div
-          className={`couple-bio-left w-full text-center ${isLeftVisible ? 'animate-fade-in-from-left' : ''}`}
-        >
-          <img 
-            src="female.jpeg" 
-            alt="Siti" 
-            className="w-30 h-32 rounded-full mx-auto mb-4 border-4 border-maroon-500 shadow-lg object-cover transform hover:scale-105 transition-transform duration-300" 
-          />
-          <h4 className="text-5xl font-great-vibes text-maroon-500 mb-2 name-content">Debby</h4>
-          <p className="text-xl font-bold text-maroon-600 mb-2">Arnida Debby Fittaloka</p>
-          <p className="text-sm text-gray-600 leading-relaxed">Putri ke 1 dari</p>
-          <p className="text-md font-medium text-maroon-500">Putri ke 1 dari Bapak Agus Eko Supriyanto (Alm.) dan Ibu Safilinda</p>
+
+      {/* ================= BRIDE ================= */}
+      <div className="max-w-5xl mx-auto flex flex-row items-center justify-center gap-5 mb-10">
+        {/* Text */}
+        <div className="w-[40%] text-right">
+          <h3
+            className="text-3xl font-bold md:text-5xl text-[#b59b72] mb-2 whitespace-nowrap"
+            style={{ fontFamily: "'Allura', cursive" }}
+          >
+            The Bride
+          </h3>
+          <h3
+            className="text-2xl md:text-5xl text-[#b59b72] mb-2"
+            style={{ fontFamily: "'Allura', cursive" }}
+          >
+            Nadya
+          </h3>
+
+          <h4 className="text-sm md:text-xl font-semibold text-[#2d2d2d]">
+            Nadya Tri Anggraeni
+          </h4>
+
+          <div className="w-16 md:w-24 h-[2px] bg-[#b59b72] mx-auto my-3" />
+
+          <p className="text-gray-700 leading-6 text-xs md:text-base">
+            Putri Dari
+            <br />
+            Alm. Bapak Cecep Anggawinata
+            <br />& Ibu Rosiah
+          </p>
+
+          <div className="w-16 md:w-24 h-[2px] bg-[#b59b72] mx-auto my-3" />
+
+          <div className="mt-4 mb-10">
+            <a
+              href="https://www.instagram.com/anggawinata0601/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm px-6 py-2 rounded-md bg-yellow-600 text-white font-medium shadow-md transition-all duration-300 hover:bg-yellow-700 hover:scale-105"
+            >
+              Instagram
+            </a>
+          </div>
         </div>
 
-        <div className="text-5xl text-maroon-500 my-4">&</div>
+        {/* Image */}
+        <div className="relative w-[60%]">
+          {/* Text Above */}
 
-        {/* Pihak Pria - Dari Kanan */}
-        <div
-          className={`couple-bio-right w-full text-center ${isRightVisible ? 'animate-fade-in-from-right' : ''}`}
-        >
-          <img 
-            src="pria.jpeg" 
-            alt="Ihsan" 
-            className="w-30 h-32 rounded-full mx-auto mb-4 border-4 border-maroon-500 shadow-lg object-cover transform hover:scale-105 transition-transform duration-300" 
-          />
-          <h4 className="text-5xl font-great-vibes text-maroon-500 mb-2 header-content">Ihsan</h4>
-          <p className="text-xl font-bold text-maroon-600 mb-2">Muhamad Nur Ihsan S</p>
-          <p className="text-sm text-gray-600 leading-relaxed">Putra ke 2 dari</p>
-          <p className="text-md font-medium text-maroon-500">Bapak R. Bagus Rahmat Susanto dan Ibu Sri Hartati</p>
+          {/* Rounded Top */}
+          <div className="rounded-t-full overflow-hidden shadow-2xl">
+            <img
+              src="nadya.jpeg"
+              alt="Nadya"
+              className="w-full h-[280px] md:h-[500px] object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ================= GROOM ================= */}
+      <div className="max-w-5xl mx-auto flex flex-row items-center justify-center gap-5">
+        {/* Image */}
+        <div className="relative w-[60%]">
+          {/* Rounded Top */}
+          <div className="rounded-t-full overflow-hidden shadow-2xl">
+            <img
+              src="febri.jpeg"
+              alt="Febri"
+              className="w-full h-[280px] md:h-[500px] object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Text */}
+        <div className="w-[40%] text-center">
+          <h3
+            className="text-3xl font-bold md:text-5xl text-[#b59b72] mb-2 whitespace-nowrap"
+            style={{ fontFamily: "'Allura', cursive" }}
+          >
+            The Groom
+          </h3>
+          <h3
+            className="text-3xl md:text-5xl text-[#b59b72] mb-2"
+            style={{ fontFamily: "'Allura', cursive" }}
+          >
+            Febri
+          </h3>
+
+          <h4 className="text-sm md:text-xl font-semibold text-[#2d2d2d]">
+            Febrianto Iswahyudi Sukarno
+          </h4>
+
+          <div className="w-16 md:w-24 h-[2px] bg-[#b59b72] mx-auto my-3" />
+
+          <p className="text-gray-700 leading-6 text-xs md:text-base">
+            Putra Dari
+            <br />
+            Bapak Sukimin
+            <br />& Ibu Samiyah
+          </p>
+
+          <div className="w-16 md:w-24 h-[2px] bg-[#b59b72] mx-auto my-3" />
+
+          <div className="mt-4 mb-10">
+            <a
+              href="https://www.instagram.com/anggawinata0601/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm px-6 py-2 rounded-md bg-yellow-600 text-white font-medium shadow-md transition-all duration-300 hover:bg-yellow-700 hover:scale-105"
+            >
+              Instagram
+            </a>
+          </div>
         </div>
       </div>
     </section>
